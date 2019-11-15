@@ -604,6 +604,15 @@ class TV extends GenericDevice {
     ];
   }
 
+  static getMetadata(item) {
+    const metadata = super.getMetadata(item);
+    const members = this.getMembers(item);
+    for (const member in members) {
+      metadata.customData[member] = members[member].name;
+    }
+    return metadata;
+  }
+
   static checkItemType(item) {
     return item.type === 'Group';
   }
@@ -659,5 +668,6 @@ const Devices = [
 
 module.exports = {
   getDeviceForItem,
-  Thermostat
+  Thermostat,
+  TV
 }

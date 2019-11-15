@@ -18,6 +18,7 @@
  *
  */
 const Thermostat = require('./devices.js').Thermostat;
+const TV = require('./devices.js').TV;
 
 const ackSupported = [
   'action.devices.commands.ArmDisarm',
@@ -42,7 +43,7 @@ class GenericCommand {
   }
 
   static appliesTo(command = '', params = {}) {
-    return false;
+    return command === this.type;
   }
 
   static convertParamsToValue(params = {}, item = {}, device = {}) {
@@ -228,6 +229,16 @@ class SetVolumeCommand extends GenericCommand {
     return command === this.type && ('volumeLevel' in params) && typeof params.volumeLevel === 'number';
   }
 
+  static getItemName(device) {
+    if (device.currentData && device.customData.deviceType == TV.type) {
+      if (!device.customData.volume) {
+        throw { statusCode: 400 };
+      }
+      return device.customData.volume;
+    }
+    return device.id;
+  }
+
   static convertParamsToValue(params) {
     return params.volumeLevel.toString();
   }
@@ -253,7 +264,24 @@ class VolumeRelativeCommand extends GenericCommand {
     return true;
   }
 
-  static convertParamsToValue(params, item) {
+  static getItemName(device) {
+    if (device.currentData && device.customData.deviceType == TV.type) {
+      if (!device.customData.volume) {
+        throw { statusCode: 400 };
+      }
+      return device.customData.volume;
+    }
+    return device.id;
+  }
+
+  static convertParamsToValue(params, item, device) {
+    if (device.currentData && device.customData.deviceType == TV.type) {
+      const members = TV.getMembers(item);
+      if (!members.volume) {
+        throw { statusCode: 400 };
+      }
+      return parseInt(members.volume.state) + params.volumeRelativeLevel;
+    }
     return parseInt(item.state) + params.volumeRelativeLevel;
   }
 
@@ -263,6 +291,62 @@ class VolumeRelativeCommand extends GenericCommand {
       currentVolume: state,
       isMuted: state === 0
     };
+  }
+}
+
+class MediaPauseCommand extends GenericCommand {
+  static get type() {
+    return 'action.devices.commands.mediaPause';
+  }
+
+  static getItemName(device) {
+    if (device.currentData && device.customData.deviceType == TV.type) {
+      if (!device.customData.mediastate) {
+        throw { statusCode: 400 };
+      }
+      return device.customData.mediastate;
+    }
+    return device.id;
+  }
+
+  static convertParamsToValue() {
+    return 'PAUSE';
+  }
+}
+
+class MediaStopCommand extends MediaPauseCommand {
+  static get type() {
+    return 'action.devices.commands.mediaStop';
+  }
+}
+
+class MediaResumeCommand extends MediaPauseCommand {
+  static get type() {
+    return 'action.devices.commands.mediaResume';
+  }
+
+  static convertParamsToValue() {
+    return 'PLAY';
+  }
+}
+
+class MediaNextCommand extends MediaPauseCommand {
+  static get type() {
+    return 'action.devices.commands.mediaNext';
+  }
+
+  static convertParamsToValue() {
+    return 'NEXT';
+  }
+}
+
+class MediaPreviousCommand extends MediaPauseCommand {
+  static get type() {
+    return 'action.devices.commands.mediaPrevious';
+  }
+
+  static convertParamsToValue() {
+    return 'PREVIOUS';
   }
 }
 
@@ -443,6 +527,11 @@ const CommandTypes = [
   ColorAbsoluteCommand,
   OpenCloseCommand,
   StartStopCommand,
+  MediaPauseCommand,
+  MediaStopCommand,
+  MediaResumeCommand,
+  MediaNextCommand,
+  MediaPreviousCommand,
   ThermostatTemperatureSetpointCommand,
   ThermostatSetModeCommand
 ];
