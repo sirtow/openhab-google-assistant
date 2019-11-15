@@ -591,6 +591,57 @@ class Thermostat extends GenericDevice {
   }
 }
 
+class TV extends GenericDevice {
+  static get type() {
+    return 'action.devices.types.TV';
+  }
+
+  static get traits() {
+    return [
+      'action.devices.traits.Channel',
+      'action.devices.traits.MediaState',
+      'action.devices.traits.Volume'
+    ];
+  }
+
+  static checkItemType(item) {
+    return item.type === 'Group';
+  }
+
+  static getState(item) {
+    const state = {};
+    const members = this.getMembers(item);
+    if (members.channel) {
+      state.channel = members.channel.state;
+    }
+    if (members.mediaState) {
+      state.mediaState = members.mediaState.state;
+    }
+    if (members.volume) {
+      state.volume = members.volume.state;
+    }
+    return state;
+  }
+
+  static getMembers(item) {
+    const members = {};
+    item.members.forEach((member) => {
+      if (member.metadata && member.metadata.ga) {
+        if (member.metadata.ga.value.toLowerCase() === 'channel') {
+          members.channel = { name: member.name, state: member.state };
+        }
+        if (member.metadata.ga.value.toLowerCase() === 'mediastate') {
+          members.mediastate = { name: member.name, state: member.state };
+        }
+        if (member.metadata.ga.value.toLowerCase() === 'volume') {
+          members.volume = { name: member.name, state: member.state };
+        }
+      }
+    });
+    return members;
+  }
+}
+
 const Devices = [
   Switch, Outlet, Fan, CoffeeMaker, WaterHeater, Fireplace,
   Valve,
@@ -602,7 +653,8 @@ const Devices = [
   Awning, Blinds, Curtain, Door, Garage, Gate, Shutter, Pergola, Window,
   Speaker,
   Sensor,
-  Thermostat
+  Thermostat,
+  TV
 ];
 
 module.exports = {
