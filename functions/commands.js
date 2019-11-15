@@ -230,7 +230,7 @@ class SetVolumeCommand extends GenericCommand {
   }
 
   static getItemName(device) {
-    if (device.currentData && device.customData.deviceType == TV.type) {
+    if (device.customData && device.customData.deviceType == TV.type) {
       if (!device.customData.volume) {
         throw { statusCode: 400 };
       }
@@ -265,7 +265,7 @@ class VolumeRelativeCommand extends GenericCommand {
   }
 
   static getItemName(device) {
-    if (device.currentData && device.customData.deviceType == TV.type) {
+    if (device.customData && device.customData.deviceType == TV.type) {
       if (!device.customData.volume) {
         throw { statusCode: 400 };
       }
@@ -275,7 +275,7 @@ class VolumeRelativeCommand extends GenericCommand {
   }
 
   static convertParamsToValue(params, item, device) {
-    if (device.currentData && device.customData.deviceType == TV.type) {
+    if (device.customData && device.customData.deviceType == TV.type) {
       const members = TV.getMembers(item);
       if (!members.volume) {
         throw { statusCode: 400 };
@@ -300,7 +300,7 @@ class MediaPauseCommand extends GenericCommand {
   }
 
   static getItemName(device) {
-    if (device.currentData && device.customData.deviceType == TV.type) {
+    if (device.customData && device.customData.deviceType == TV.type) {
       if (!device.customData.mediastate) {
         throw { statusCode: 400 };
       }
