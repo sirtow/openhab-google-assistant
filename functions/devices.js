@@ -39,28 +39,29 @@ class GenericDevice {
   }
 
   static getMetadata(item = {}) {
+    const config = item.metadata.ga.config;
     const customData = {
       itemType: item.type,
       deviceType: this.type
     };
-    if (item.metadata.ga.config && item.metadata.ga.config.tfaAck) {
-      customData.tfaAck = item.metadata.ga.config.tfaAck;
+    if (config && config.tfaAck) {
+      customData.tfaAck = config.tfaAck;
     }
-    if (item.metadata.ga.config && item.metadata.ga.config.tfaPin) {
-      customData.tfaPin = item.metadata.ga.config.tfaPin;
+    if (config && config.tfaPin) {
+      customData.tfaPin = config.tfaPin;
     }
     return {
       id: item.name,
       type: this.type,
       traits: this.traits,
       name: {
-        name: item.name,
-        nicknames: [],
-        defaultNames: [item.name]
+        name: item.label,
+        defaultNames: [item.label],
+        nicknames: [item.label, ...(item.metadata.synonyms ? item.metadata.synonyms.value.split(',') : [])]
       },
       willReportState: false,
-      roomHint: '',
-      structureHint: '',
+      roomHint: config && config.roomHint || '',
+      structureHint: config && config.structureHint || '',
       deviceInfo: {
         manufacturer: 'openHAB',
         model: item.type,
@@ -445,6 +446,37 @@ class Speaker extends GenericDevice {
   }
 }
 
+class Sensor extends GenericDevice {
+  static get type() {
+    return 'action.devices.types.SENSOR';
+  }
+
+  static get traits() {
+    return [
+      'action.devices.traits.Sensor'
+    ];
+  }
+
+  static getAttributes(item) {
+    return {
+      dataTypesSupported: [{
+        name: item.name,
+        data_type: [{ type_synonym: [item.metadata.ga.config && item.metadata.ga.config.type || ''], lang: "en" }],
+        default_device_unit: item.metadata.ga.config && item.metadata.ga.config.unit || ''
+      }]
+    };
+  }
+
+  static getState(item) {
+    return {
+      name: item.name,
+      data_type_key: item.metadata.ga.config && item.metadata.ga.config.type || '',
+      default_device_units: item.metadata.ga.config && item.metadata.ga.config.unit || '',
+      data_value: item.state
+    };
+  }
+}
+
 class Thermostat extends GenericDevice {
   static get type() {
     return 'action.devices.types.THERMOSTAT';
@@ -569,6 +601,7 @@ const Devices = [
   SimpleLight, DimmableLight, ColorLight,
   Awning, Blinds, Curtain, Door, Garage, Gate, Shutter, Pergola, Window,
   Speaker,
+  Sensor,
   Thermostat
 ];
 
