@@ -350,6 +350,30 @@ class MediaPreviousCommand extends MediaPauseCommand {
   }
 }
 
+class SelectChannelCommand extends GenericCommand {
+  static get type() {
+    return 'action.devices.commands.selectChannel';
+  }
+
+  static appliesTo(command, params) {
+    return command === this.type && ('channelNumber' in params) && typeof params.channelNumber === 'number';
+  }
+
+  static getItemName(device) {
+    if (device.customData && device.customData.deviceType == TV.type) {
+      if (!device.customData.channel) {
+        throw { statusCode: 400 };
+      }
+      return device.customData.channel;
+    }
+    return device.id;
+  }
+
+  static convertParamsToValue(params) {
+    return params.channelNumber.toString();
+  }
+}
+
 class BrightnessAbsoluteCommand extends GenericCommand {
   static get type() {
     return 'action.devices.commands.BrightnessAbsolute';
@@ -532,6 +556,7 @@ const CommandTypes = [
   MediaResumeCommand,
   MediaNextCommand,
   MediaPreviousCommand,
+  SelectChannelCommand,
   ThermostatTemperatureSetpointCommand,
   ThermostatSetModeCommand
 ];
