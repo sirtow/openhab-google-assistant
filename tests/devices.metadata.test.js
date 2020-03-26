@@ -508,7 +508,6 @@ describe('Test Thermostat Device with Metadata', () => {
         name: 'MyItem',
         label: 'MyThermostat',
         type: 'Group',
-        groupType: 'Group',
         metadata: {
           ga: {
             value: 'Thermostat',
@@ -562,7 +561,7 @@ describe('Test Thermostat Device with Metadata', () => {
         "deviceInfo": {
           "hwVersion": "2.5.0",
           "manufacturer": "openHAB",
-          "model": "Group",
+          "model": "Group:MyItem",
           "swVersion": "2.5.0",
         },
         "id": "MyItem",

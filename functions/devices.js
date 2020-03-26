@@ -51,6 +51,7 @@ class GenericDevice {
 
   static getMetadata(item = {}) {
     const config = getConfig(item);
+    const itemType = item.type === 'Group' && item.groupType ? item.groupType : item.type;
     return {
       id: item.name,
       type: this.type,
@@ -65,13 +66,13 @@ class GenericDevice {
       structureHint: config.structureHint,
       deviceInfo: {
         manufacturer: 'openHAB',
-        model: item.type,
+        model: `${itemType}:${item.name}`,
         hwVersion: '2.5.0',
         swVersion: '2.5.0'
       },
       attributes: this.getAttributes(item),
       customData: {
-        itemType: item.type === 'Group' ? item.groupType : item.type,
+        itemType: itemType,
         deviceType: this.type,
         tfaAck: config.tfaAck,
         tfaPin: config.tfaPin
@@ -400,7 +401,7 @@ class GenericOpenCloseDevice extends GenericDevice {
 
   static getState(item) {
     let state = 0;
-    const itemType = item.type === 'Group' ? item.groupType : item.type;
+    const itemType = item.type === 'Group' && item.groupType ? item.groupType : item.type;
     if (itemType == 'Switch') {
       state = item.state === 'ON' ? 0 : 100;
     } else {

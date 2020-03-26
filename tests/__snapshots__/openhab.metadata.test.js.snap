@@ -56,7 +56,7 @@ Object {
       "deviceInfo": Object {
         "hwVersion": "2.5.0",
         "manufacturer": "openHAB",
-        "model": "Dimmer",
+        "model": "Dimmer:MyFan",
         "swVersion": "2.5.0",
       },
       "id": "MyFan",
@@ -96,7 +96,7 @@ Object {
       "deviceInfo": Object {
         "hwVersion": "2.5.0",
         "manufacturer": "openHAB",
-        "model": "Switch",
+        "model": "Switch:MySwitch",
         "swVersion": "2.5.0",
       },
       "id": "MySwitch",
@@ -130,7 +130,7 @@ Object {
       "deviceInfo": Object {
         "hwVersion": "2.5.0",
         "manufacturer": "openHAB",
-        "model": "Dimmer",
+        "model": "Dimmer:MyDimmer",
         "swVersion": "2.5.0",
       },
       "id": "MyDimmer",
@@ -165,7 +165,7 @@ Object {
       "deviceInfo": Object {
         "hwVersion": "2.5.0",
         "manufacturer": "openHAB",
-        "model": "Color",
+        "model": "Color:MyLight",
         "swVersion": "2.5.0",
       },
       "id": "MyLight",
@@ -199,7 +199,7 @@ Object {
       "deviceInfo": Object {
         "hwVersion": "2.5.0",
         "manufacturer": "openHAB",
-        "model": "Group",
+        "model": "Switch:MyLightGroup",
         "swVersion": "2.5.0",
       },
       "id": "MyLightGroup",
@@ -231,7 +231,7 @@ Object {
       "deviceInfo": Object {
         "hwVersion": "2.5.0",
         "manufacturer": "openHAB",
-        "model": "Group",
+        "model": "Dimmer:MyDimmerGroup",
         "swVersion": "2.5.0",
       },
       "id": "MyDimmerGroup",
@@ -266,7 +266,7 @@ Object {
       "deviceInfo": Object {
         "hwVersion": "2.5.0",
         "manufacturer": "openHAB",
-        "model": "Group",
+        "model": "Color:MyColorGroup",
         "swVersion": "2.5.0",
       },
       "id": "MyColorGroup",
@@ -309,7 +309,7 @@ Object {
       "deviceInfo": Object {
         "hwVersion": "2.5.0",
         "manufacturer": "openHAB",
-        "model": "Switch",
+        "model": "Switch:MyScene",
         "swVersion": "2.5.0",
       },
       "id": "MyScene",
@@ -328,6 +328,57 @@ Object {
         "action.devices.traits.Scene",
       ],
       "type": "action.devices.types.SCENE",
+      "willReportState": false,
+    },
+  ],
+}
+`;
+
+exports[`Test SYNC with Metadata Sensor Device 1`] = `
+Object {
+  "devices": Array [
+    Object {
+      "attributes": Object {
+        "sensorStatesSupported": Object {
+          "descriptiveCapabilities": Object {
+            "availableStates": Array [
+              "healthy",
+              "moderate",
+              "unhealthy",
+              "very unhealthy",
+            ],
+          },
+          "name": "AirQuality",
+        },
+      },
+      "customData": Object {
+        "deviceType": "action.devices.types.SENSOR",
+        "itemType": "Number",
+        "tfaAck": undefined,
+        "tfaPin": undefined,
+      },
+      "deviceInfo": Object {
+        "hwVersion": "2.5.0",
+        "manufacturer": "openHAB",
+        "model": "Number:MySensor",
+        "swVersion": "2.5.0",
+      },
+      "id": "MySensor",
+      "name": Object {
+        "defaultNames": Array [
+          "My Sensor",
+        ],
+        "name": "My Sensor",
+        "nicknames": Array [
+          "My Sensor",
+        ],
+      },
+      "roomHint": undefined,
+      "structureHint": undefined,
+      "traits": Array [
+        "action.devices.traits.SensorState",
+      ],
+      "type": "action.devices.types.SENSOR",
       "willReportState": false,
     },
   ],

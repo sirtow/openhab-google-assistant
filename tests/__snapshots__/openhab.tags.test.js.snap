@@ -14,7 +14,7 @@ Object {
       "deviceInfo": Object {
         "hwVersion": "2.5.0",
         "manufacturer": "openHAB",
-        "model": "Switch",
+        "model": "Switch:MySwitch",
         "swVersion": "2.5.0",
       },
       "id": "MySwitch",
@@ -46,7 +46,7 @@ Object {
       "deviceInfo": Object {
         "hwVersion": "2.5.0",
         "manufacturer": "openHAB",
-        "model": "Dimmer",
+        "model": "Dimmer:MyDimmer",
         "swVersion": "2.5.0",
       },
       "id": "MyDimmer",
@@ -81,7 +81,7 @@ Object {
       "deviceInfo": Object {
         "hwVersion": "2.5.0",
         "manufacturer": "openHAB",
-        "model": "Color",
+        "model": "Color:MyLight",
         "swVersion": "2.5.0",
       },
       "id": "MyLight",
@@ -115,7 +115,7 @@ Object {
       "deviceInfo": Object {
         "hwVersion": "2.5.0",
         "manufacturer": "openHAB",
-        "model": "Group",
+        "model": "Switch:MyLightGroup",
         "swVersion": "2.5.0",
       },
       "id": "MyLightGroup",
@@ -147,7 +147,7 @@ Object {
       "deviceInfo": Object {
         "hwVersion": "2.5.0",
         "manufacturer": "openHAB",
-        "model": "Group",
+        "model": "Dimmer:MyDimmerGroup",
         "swVersion": "2.5.0",
       },
       "id": "MyDimmerGroup",
@@ -182,7 +182,7 @@ Object {
       "deviceInfo": Object {
         "hwVersion": "2.5.0",
         "manufacturer": "openHAB",
-        "model": "Group",
+        "model": "Color:MyColorGroup",
         "swVersion": "2.5.0",
       },
       "id": "MyColorGroup",

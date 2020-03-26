@@ -157,6 +157,38 @@ describe('Test SYNC with Metadata', () => {
     expect(getItemsMock).toHaveBeenCalledTimes(1);
     expect(payload).toMatchSnapshot();
   });
+
+  test('Sensor Device', async () => {
+    const items = [
+      {
+        "state": "14",
+        "metadata": {
+          "ga": {
+            "value": "Sensor",
+            "config": {
+              "sensorName": "AirQuality",
+              "states": "healthy=0,moderate=10,unhealthy=50,very unhealthy=100"
+            }
+          }
+        },
+        "type": "Number",
+        "name": "MySensor",
+        "label": "My Sensor",
+        "tags": []
+      }
+    ];
+    const getItemsMock = jest.fn();
+    getItemsMock.mockReturnValue(Promise.resolve(items));
+
+    const apiHandler = {
+      getItems: getItemsMock
+    };
+
+    const payload = await new OpenHAB(apiHandler).handleSync();
+
+    expect(getItemsMock).toHaveBeenCalledTimes(1);
+    expect(payload).toMatchSnapshot();
+  });
 });
 
 describe('Test QUERY with Metadata', () => {
