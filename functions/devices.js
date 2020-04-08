@@ -52,42 +52,37 @@ class GenericDevice {
   static getMetadata(item = {}) {
     const config = getConfig(item);
     const itemType = item.type === 'Group' && item.groupType ? item.groupType : item.type;
+    const traits = this.traits;
     const attributes = {};
 
-    if (this.traits.includes('action.devices.traits.Modes') && ('modes' in config)) {
-      // modes={mode1_name={synonyms="First Mode,Size",settings={setting1_name="Setting 1,Small",setting2_name="Setting 2,Large"}}}
-      attributes.availableModes = Object.keys(config.modes).map(mode_name => {
-        const mode = config.modes[mode_name];
-
-        const settings = Object.keys(mode.settings).map(setting_name => ({
-            setting_name: setting_name,
-            setting_values: [
-              {
-                setting_synonym: [setting_name].concat(mode.settings[setting_name].split(',')),
-                lang: config.lang || 'en'
-              }
-            ]
-          })
-        );
-
-        return {
-          name: mode_name,
-          name_values: [
+    if (('modes' in config) && this.type !== 'action.devices.types.THERMOSTAT') {
+      traits.push('action.devices.traits.Modes');
+      // modes={name="",synonyms="My Mode,Size",settings={setting1_name="Setting 1,Small",setting2_name="Setting 2,Large"}}
+      attributes.availableModes = [{
+        name: config.modes.name,
+        name_values: [
+          {
+            name_synonym: [config.modes.name].concat((config.modes.synonyms || '').split(',')),
+            lang: config.lang || 'en'
+          }
+        ],
+        settings: Object.keys(config.modes.settings || {}).map(setting_name => ({
+          setting_name: setting_name,
+          setting_values: [
             {
-              name_synonym: [mode_name].concat(mode.synonyms.split(',')),
+              setting_synonym: [setting_name].concat(config.modes.settings[setting_name].split(',')),
               lang: config.lang || 'en'
             }
-          ],
-          settings: settings,
-          ordered: true
-        };
-      });
+          ]
+        })),
+        ordered: true
+      }];
     }
 
     return {
       id: item.name,
       type: this.type,
-      traits: this.traits,
+      traits: traits,
       name: {
         name: config.name || item.label,
         defaultNames: [config.name || item.label],
@@ -125,7 +120,15 @@ class GenericDevice {
   }
 
   static getState(item = {}) {
-    return {};
+    const state = { online: true };
+    const config = getConfig(item);
+    if (('modes' in config) && this.type !== 'action.devices.types.THERMOSTAT') {
+      if (Object.keys(config.modes.settings).includes(item.state)) {
+        state.currentModeSettings = {};
+        state.currentModeSettings[config.modes.name] = item.state;
+      }
+    }
+    return state;
   }
 }
 
@@ -147,9 +150,9 @@ class Switch extends GenericDevice {
   }
 
   static getState(item) {
-    return {
+    return Object.assign(super.getState(item), {
       on: item.state === 'ON'
-    };
+    });
   }
 }
 
@@ -213,9 +216,9 @@ class Valve extends GenericDevice {
   }
 
   static getState(item) {
-    return {
+    return Object.assign(super.getState(item), {
       openPercent: item.state === 'ON' ? 100 : 0
-    };
+    });
   }
 }
 
@@ -233,10 +236,10 @@ class StartStopSwitch extends GenericDevice {
   }
 
   static getState(item) {
-    return {
+    return Object.assign(super.getState(item), {
       isRunning: item.state === 'ON',
       isPaused: item.state !== 'ON'
-    };
+    });
   }
 }
 
@@ -294,9 +297,9 @@ class Lock extends GenericDevice {
   }
 
   static getState(item) {
-    return {
+    return Object.assign(super.getState(item), {
       isLocked: item.state === 'ON'
-    };
+    });
   }
 }
 
@@ -318,9 +321,9 @@ class SecuritySystem extends GenericDevice {
   }
 
   static getState(item) {
-    return {
+    return Object.assign(super.getState(item), {
       isArmed: item.state === 'ON'
-    };
+    });
   }
 }
 
@@ -352,10 +355,10 @@ class DimmableLight extends GenericDevice {
 
   static getState(item) {
     let brightness = Number(item.state) || 0;
-    return {
+    return Object.assign(super.getState(item), {
       on: brightness > 0,
       brightness: brightness
-    };
+    });
   }
 }
 
@@ -397,7 +400,7 @@ class ColorLight extends GenericDevice {
 
   static getState(item) {
     const hsvArray = item.state.split(",").map((val) => Number(val));
-    return {
+    return Object.assign(super.getState(item), {
       on: hsvArray[2] > 0,
       brightness: hsvArray[2],
       color: {
@@ -407,7 +410,7 @@ class ColorLight extends GenericDevice {
           value: hsvArray[2] / 100
         }
       }
-    };
+    });
   }
 }
 
@@ -439,9 +442,9 @@ class GenericOpenCloseDevice extends GenericDevice {
     } else {
       state = Number(item.state);
     }
-    return {
+    return Object.assign(super.getState(item), {
       openPercent: getConfig(item).inverted !== true ? 100 - state : state
-    };
+    });
   }
 }
 
@@ -516,10 +519,10 @@ class Speaker extends GenericDevice {
 
   static getState(item) {
     const volume = Number(item.state) || 0;
-    return {
+    return Object.assign(super.getState(item), {
       currentVolume: volume,
       isMuted: volume === 0
-    };
+    });
   }
 }
 
@@ -587,14 +590,14 @@ class Fan extends GenericDevice {
   }
 
   static get requiredItemTypes() {
-    return ['Dimmer'];
+    return ['Dimmer', 'Number', 'String'];
   }
 
   static getState(item) {
-    return {
+    return Object.assign(super.getState(item), {
       currentFanSpeedSetting: item.state.toString(),
       on: Number(item.state) > 0
-    };
+    });
   }
 }
 
@@ -646,13 +649,13 @@ class Sensor extends GenericDevice {
 
   static getState(item) {
     const config = getConfig(item);
-    return {
+    return Object.assign(super.getState(item), {
       currentSensorStateData: {
         name: config.sensorName,
         currentSensorState: this.translateStateToGoogle(item),
         rawValue: Number(item.state) || 0
       }
-    };
+    });
   }
 
   static translateStateToGoogle(item) {
@@ -715,7 +718,7 @@ class Thermostat extends GenericDevice {
         }
       }
     }
-    return state;
+    return Object.assign(super.getState(item), state);
   }
 
   static getMembers(item) {

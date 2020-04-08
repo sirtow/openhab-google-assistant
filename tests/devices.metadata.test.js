@@ -14,6 +14,7 @@ describe('Test Switch Devices with Metadata', () => {
     const device = Devices.getDeviceForItem(item);
     expect(device.name).toBe('Switch');
     expect(device.getState(item)).toStrictEqual({
+      online: true,
       on: true
     });
   });
@@ -31,6 +32,7 @@ describe('Test Switch Devices with Metadata', () => {
     const device = Devices.getDeviceForItem(item);
     expect(device.name).toBe('Valve');
     expect(device.getState(item)).toStrictEqual({
+      online: true,
       openPercent: 100
     });
   });
@@ -48,6 +50,7 @@ describe('Test Switch Devices with Metadata', () => {
     const device = Devices.getDeviceForItem(item);
     expect(device.name).toBe('Sprinkler');
     expect(device.getState(item)).toStrictEqual({
+      online: true,
       isRunning: true,
       isPaused: false
     });
@@ -66,6 +69,7 @@ describe('Test Switch Devices with Metadata', () => {
     const device = Devices.getDeviceForItem(item);
     expect(device.name).toBe('Lock');
     expect(device.getState(item)).toStrictEqual({
+      online: true,
       isLocked: true
     });
   });
@@ -83,6 +87,7 @@ describe('Test Switch Devices with Metadata', () => {
     const device = Devices.getDeviceForItem(item);
     expect(device.name).toBe('SecuritySystem');
     expect(device.getState(item)).toStrictEqual({
+      online: true,
       isArmed: true
     });
   });
@@ -103,6 +108,7 @@ describe('Test Light Devices with Metadata', () => {
     expect(device.name).toBe('SimpleLight');
     expect(device.getAttributes(item)).toStrictEqual({});
     expect(device.getState(item)).toStrictEqual({
+      online: true,
       on: true
     });
   });
@@ -121,6 +127,7 @@ describe('Test Light Devices with Metadata', () => {
     expect(device.name).toBe('DimmableLight');
     expect(device.getAttributes(item)).toStrictEqual({});
     expect(device.getState(item)).toStrictEqual({
+      online: true,
       brightness: 40,
       on: true
     });
@@ -142,6 +149,7 @@ describe('Test Light Devices with Metadata', () => {
       colorModel: 'hsv'
     });
     expect(device.getState(item)).toStrictEqual({
+      online: true,
       brightness: 20,
       color: {
         spectrumHSV: {
@@ -203,6 +211,7 @@ describe('Test Rollershutter Devices with Metadata', () => {
     const device = Devices.getDeviceForItem(item);
     expect(device.name).toBe('Blinds');
     expect(device.getState(item)).toStrictEqual({
+      online: true,
       openPercent: 100
     });
   });
@@ -223,6 +232,7 @@ describe('Test Rollershutter Devices with Metadata', () => {
     const device = Devices.getDeviceForItem(item);
     expect(device.name).toBe('Blinds');
     expect(device.getState(item)).toStrictEqual({
+      online: true,
       openPercent: 0
     });
   });
@@ -307,10 +317,11 @@ describe('Test Sensor Device with Metadata', () => {
 
   test('getState', () => {
     expect(device.getState(item)).toStrictEqual({
-      "currentSensorStateData": {
-        "currentSensorState": "high",
-        "name": "MySensor",
-        "rawValue": 100,
+      online: true,
+      currentSensorStateData: {
+        currentSensorState: "high",
+        name: "MySensor",
+        rawValue: 100
       }
     });
   });
@@ -590,7 +601,9 @@ describe('Test Thermostat Device with Metadata', () => {
           value: 'Thermostat'
         }
       }
-    })).toStrictEqual({});
+    })).toStrictEqual({
+      online: true
+    });
 
     expect(Devices.Thermostat.getState({
       type: 'Group',
@@ -628,9 +641,10 @@ describe('Test Thermostat Device with Metadata', () => {
         state: 'off'
       }]
     })).toStrictEqual({
-      'thermostatTemperatureAmbient': -12.2,
-      'thermostatTemperatureSetpoint': -6.7,
-      'thermostatMode': 'off'
+      online: true,
+      thermostatTemperatureAmbient: -12.2,
+      thermostatTemperatureSetpoint: -6.7,
+      thermostatMode: 'off'
     });
 
     expect(Devices.Thermostat.getState({
@@ -693,12 +707,13 @@ describe('Test Thermostat Device with Metadata', () => {
         state: '50'
       }]
     })).toStrictEqual({
-      'thermostatTemperatureAmbient': 10,
-      'thermostatTemperatureSetpoint': 20,
-      'thermostatTemperatureSetpointHigh': 22,
-      'thermostatTemperatureSetpointLow': 18,
-      'thermostatMode': 'heat',
-      'thermostatHumidityAmbient': 50,
+      online: true,
+      thermostatTemperatureAmbient: 10,
+      thermostatTemperatureSetpoint: 20,
+      thermostatTemperatureSetpointHigh: 22,
+      thermostatTemperatureSetpointLow: 18,
+      thermostatMode: 'heat',
+      thermostatHumidityAmbient: 50,
     });
   });
 });

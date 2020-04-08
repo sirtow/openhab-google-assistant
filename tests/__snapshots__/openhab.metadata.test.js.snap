@@ -384,3 +384,88 @@ Object {
   ],
 }
 `;
+
+exports[`Test SYNC with Metadata Switch Device with Modes 1`] = `
+Object {
+  "devices": Array [
+    Object {
+      "attributes": Object {
+        "availableModes": Array [
+          Object {
+            "name": "mode1_name",
+            "name_values": Array [
+              Object {
+                "lang": "en",
+                "name_synonym": Array [
+                  "mode1_name",
+                  "First Mode",
+                  "Size",
+                ],
+              },
+            ],
+            "ordered": true,
+            "settings": Array [
+              Object {
+                "setting_name": "setting1_name",
+                "setting_values": Array [
+                  Object {
+                    "lang": "en",
+                    "setting_synonym": Array [
+                      "setting1_name",
+                      "Setting 1",
+                      "Small",
+                    ],
+                  },
+                ],
+              },
+              Object {
+                "setting_name": "setting2_name",
+                "setting_values": Array [
+                  Object {
+                    "lang": "en",
+                    "setting_synonym": Array [
+                      "setting2_name",
+                      "Setting 2",
+                      "Large",
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      "customData": Object {
+        "deviceType": "action.devices.types.SWITCH",
+        "itemType": "Switch",
+        "tfaAck": undefined,
+        "tfaPin": undefined,
+      },
+      "deviceInfo": Object {
+        "hwVersion": "2.5.0",
+        "manufacturer": "openHAB",
+        "model": "Switch:MySwitch",
+        "swVersion": "2.5.0",
+      },
+      "id": "MySwitch",
+      "name": Object {
+        "defaultNames": Array [
+          "My Switch",
+        ],
+        "name": "My Switch",
+        "nicknames": Array [
+          "My Switch",
+        ],
+      },
+      "roomHint": undefined,
+      "structureHint": undefined,
+      "traits": Array [
+        "action.devices.traits.OnOff",
+        "action.devices.traits.Modes",
+      ],
+      "type": "action.devices.types.SWITCH",
+      "willReportState": false,
+    },
+  ],
+}
+`;

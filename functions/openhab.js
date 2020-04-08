@@ -62,7 +62,7 @@ class OpenHAB {
 				if (item.state === 'NULL' && !('getMembers' in DeviceType)) {
 					throw { statusCode: 406 };
 				}
-				payload.devices[device.id] = Object.assign({ online: true }, DeviceType.getState(item));
+				payload.devices[device.id] = DeviceType.getState(item);
 			}).catch((error) => {
 				payload.devices[device.id] = {
 					status: 'ERROR',

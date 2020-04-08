@@ -97,6 +97,45 @@ describe('Test SYNC with Metadata', () => {
     expect(payload).toMatchSnapshot();
   });
 
+  test('Switch Device with Modes', async () => {
+    const items = [
+      {
+        "state": "OFF",
+        "metadata": {
+          "ga": {
+            "value": "SWITCH",
+            "config": {
+              "modes": {
+                "name": "mode1_name",
+                "synonyms":"First Mode,Size",
+                "settings":{
+                  "setting1_name":"Setting 1,Small",
+                  "setting2_name":"Setting 2,Large"
+                }
+              },
+              "lang": "en"
+            }
+          }
+        },
+        "type": "Switch",
+        "name": "MySwitch",
+        "label": "My Switch",
+        "tags": []
+      }
+    ];
+    const getItemsMock = jest.fn();
+    getItemsMock.mockReturnValue(Promise.resolve(items));
+
+    const apiHandler = {
+      getItems: getItemsMock
+    };
+
+    const payload = await new OpenHAB(apiHandler).handleSync();
+
+    expect(getItemsMock).toHaveBeenCalledTimes(1);
+    expect(payload).toMatchSnapshot();
+  });
+
   test('Fan Device', async () => {
     const items = [
       {
@@ -282,6 +321,55 @@ describe('Test QUERY with Metadata', () => {
     });
   });
 
+  test('Fan Device with Modes', async () => {
+    const item = {
+      "state": "0",
+      "metadata": {
+        "ga": {
+          "value": "FAN",
+          "config": {
+            "modes": {
+              "name": "MyMode",
+              "synonyms":"Modus",
+              "settings":{
+                "0":"Stopped",
+                "100":"Running"
+              }
+            },
+            "lang": "en"
+          }
+        }
+      },
+      "type": "Number",
+      "name": "MyFan"
+    };
+
+    const getItemMock = jest.fn();
+    getItemMock.mockReturnValue(Promise.resolve(item));
+
+    const apiHandler = {
+      getItem: getItemMock
+    };
+
+    const payload = await new OpenHAB(apiHandler).handleQuery([{
+      "id": "MyFan"
+    }]);
+
+    expect(getItemMock).toHaveBeenCalledTimes(1);
+    expect(payload).toStrictEqual({
+      "devices": {
+        "MyFan": {
+          "on": false,
+          "online": true,
+          "currentFanSpeedSetting": "0",
+          "currentModeSettings": {
+            "MyMode": "0"
+          }
+        }
+      }
+    });
+  });
+
   test('Blinds as Rollershutter Device', async () => {
     const item =
     {
@@ -404,7 +492,7 @@ describe('Test QUERY with Metadata', () => {
         }
       },
       "type": "Dimmer",
-      "name": "MyFan",
+      "name": "MyFan"
     };
     const getItemMock = jest.fn();
     getItemMock.mockReturnValue(Promise.resolve(item));

@@ -12,6 +12,7 @@ describe('Test Switch Devices with Tags', () => {
     const device = Devices.getDeviceForItem(item);
     expect(device.name).toBe('Switch');
     expect(device.getState(item)).toStrictEqual({
+      online: true,
       on: true
     });
   });
@@ -27,6 +28,7 @@ describe('Test Switch Devices with Tags', () => {
     const device = Devices.getDeviceForItem(item);
     expect(device.name).toBe('Valve');
     expect(device.getState(item)).toStrictEqual({
+      online: true,
       openPercent: 100
     });
   });
@@ -42,6 +44,7 @@ describe('Test Switch Devices with Tags', () => {
     const device = Devices.getDeviceForItem(item);
     expect(device.name).toBe('Sprinkler');
     expect(device.getState(item)).toStrictEqual({
+      online: true,
       isRunning: true,
       isPaused: false
     });
@@ -58,6 +61,7 @@ describe('Test Switch Devices with Tags', () => {
     const device = Devices.getDeviceForItem(item);
     expect(device.name).toBe('Lock');
     expect(device.getState(item)).toStrictEqual({
+      online: true,
       isLocked: true
     });
   });
@@ -73,6 +77,7 @@ describe('Test Switch Devices with Tags', () => {
     const device = Devices.getDeviceForItem(item);
     expect(device.name).toBe('SecuritySystem');
     expect(device.getState(item)).toStrictEqual({
+      online: true,
       isArmed: true
     });
   });
@@ -158,6 +163,7 @@ describe('Test Rollershutter Devices with Tags', () => {
     const device = Devices.getDeviceForItem(item);
     expect(device.name).toBe('Blinds');
     expect(device.getState(item)).toStrictEqual({
+      online: true,
       openPercent: 100
     });
   });
@@ -223,7 +229,9 @@ describe('Test Thermostat Device with Tags', () => {
       tags: [
         'Thermostat'
       ]
-    })).toStrictEqual({});
+    })).toStrictEqual({
+      online: true
+    });
 
     expect(Devices.Thermostat.getState({
       type: 'Group',
@@ -251,9 +259,10 @@ describe('Test Thermostat Device with Tags', () => {
         state: 'off'
       }]
     })).toStrictEqual({
-      'thermostatTemperatureAmbient': -12.2,
-      'thermostatTemperatureSetpoint': -6.7,
-      'thermostatMode': 'off'
+      online: true,
+      thermostatTemperatureAmbient: -12.2,
+      thermostatTemperatureSetpoint: -6.7,
+      thermostatMode: 'off'
     });
 
     expect(Devices.Thermostat.getState({
@@ -287,10 +296,11 @@ describe('Test Thermostat Device with Tags', () => {
         state: '50'
       }]
     })).toStrictEqual({
-      'thermostatTemperatureAmbient': 10,
-      'thermostatTemperatureSetpoint': 20,
-      'thermostatMode': 'heat',
-      'thermostatHumidityAmbient': 50,
+      online: true,
+      thermostatTemperatureAmbient: 10,
+      thermostatTemperatureSetpoint: 20,
+      thermostatMode: 'heat',
+      thermostatHumidityAmbient: 50,
     });
   });
 });
