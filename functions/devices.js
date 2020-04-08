@@ -52,6 +52,38 @@ class GenericDevice {
   static getMetadata(item = {}) {
     const config = getConfig(item);
     const itemType = item.type === 'Group' && item.groupType ? item.groupType : item.type;
+    const attributes = {};
+
+    if (this.traits.includes('action.devices.traits.Modes') && ('modes' in config)) {
+      // modes={mode1_name={synonyms="First Mode,Size",settings={setting1_name="Setting 1,Small",setting2_name="Setting 2,Large"}}}
+      attributes.availableModes = Object.keys(config.modes).map(mode_name => {
+        const mode = config.modes[mode_name];
+
+        const settings = Object.keys(mode.settings).map(setting_name => ({
+            setting_name: setting_name,
+            setting_values: [
+              {
+                setting_synonym: [setting_name].concat(mode.settings[setting_name].split(',')),
+                lang: config.lang || 'en'
+              }
+            ]
+          })
+        );
+
+        return {
+          name: mode_name,
+          name_values: [
+            {
+              name_synonym: [mode_name].concat(mode.synonyms.split(',')),
+              lang: config.lang || 'en'
+            }
+          ],
+          settings: settings,
+          ordered: true
+        };
+      });
+    }
+
     return {
       id: item.name,
       type: this.type,
@@ -70,7 +102,7 @@ class GenericDevice {
         hwVersion: '2.5.0',
         swVersion: '2.5.0'
       },
-      attributes: this.getAttributes(item),
+      attributes: Object.assign(attributes, this.getAttributes(item)),
       customData: {
         itemType: itemType,
         deviceType: this.type,
