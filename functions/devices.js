@@ -110,6 +110,12 @@ class Switch extends GenericDevice {
     ];
   }
 
+  static getMetadata(item) {
+    const metadata = super.getMetadata(item);
+    metadata.customData.inverted = getConfig(item).inverted === true;
+    return metadata;
+  }
+
   static get requiredItemTypes() {
     return ['Switch'];
   }
