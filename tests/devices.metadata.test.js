@@ -572,7 +572,7 @@ describe('Test Thermostat Device with Metadata', () => {
         },
         "customData": {
           "deviceType": "action.devices.types.THERMOSTAT",
-          "itemType": undefined,
+          "itemType": "Group",
           "tfaAck": undefined,
           "tfaPin": undefined
         },
