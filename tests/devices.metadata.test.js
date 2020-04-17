@@ -18,6 +18,26 @@ describe('Test Switch Devices with Metadata', () => {
     });
   });
 
+  test('Inverted Switch Type', () => {
+    const item = {
+      type: 'Switch',
+      state: 'ON',
+      metadata: {
+        ga: {
+          value: 'Switch',
+          config: {
+            inverted: true
+          }
+        }
+      }
+    };
+    const device = Devices.getDeviceForItem(item);
+    expect(device.name).toBe('Switch');
+    expect(device.getState(item)).toStrictEqual({
+      on: false
+    });
+  });
+
   test('Valve Switch Type', () => {
     const item = {
       type: 'Switch',
@@ -552,7 +572,7 @@ describe('Test Thermostat Device with Metadata', () => {
         },
         "customData": {
           "deviceType": "action.devices.types.THERMOSTAT",
-          "itemType": "Group",
+          "itemType": undefined,
           "tfaAck": undefined,
           "tfaPin": undefined
         },

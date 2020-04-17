@@ -115,8 +115,12 @@ class Switch extends GenericDevice {
   }
 
   static getState(item) {
+    let state = item.state === 'ON';
+    if (getConfig(item).inverted === true) {
+      state = !state;
+    }
     return {
-      on: item.state === 'ON'
+      on: state
     };
   }
 }
