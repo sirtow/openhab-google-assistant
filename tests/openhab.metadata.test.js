@@ -1166,7 +1166,7 @@ describe('Test EXECUTE with Metadata', () => {
         "ga": {
           "value": "Lock",
           "config": {
-            "tfaAck": true
+            "ackNeeded": true
           }
         }
       },
@@ -1186,7 +1186,7 @@ describe('Test EXECUTE with Metadata', () => {
     const commands = [{
       "devices": [{
         "customData": {
-          "tfaAck": true
+          "ackNeeded": true
         },
         "id": "MyLock"
       }],
@@ -1234,7 +1234,7 @@ describe('Test EXECUTE with Metadata', () => {
     const commands = [{
       "devices": [{
         "customData": {
-          "tfaAck": true
+          "ackNeeded": true
         },
         "id": "MyLock"
       }],
@@ -1407,7 +1407,7 @@ describe('Test EXECUTE with Metadata', () => {
     const commands = [{
       "devices": [{
         "customData": {
-          "tfaAck": true
+          "ackNeeded": true
         },
         "id": "MyLight"
       }],
@@ -1454,7 +1454,7 @@ describe('Test EXECUTE with Metadata', () => {
     const commands = [{
       "devices": [{
         "customData": {
-          "tfaPin": "1234"
+          "pinNeeded": "1234"
         },
         "id": "MyAlarm"
       }],
@@ -1497,7 +1497,7 @@ describe('Test EXECUTE with Metadata', () => {
     const commands = [{
       "devices": [{
         "customData": {
-          "tfaPin": "1234"
+          "pinNeeded": "1234"
         },
         "id": "MyAlarm"
       }],
@@ -1543,7 +1543,7 @@ describe('Test EXECUTE with Metadata', () => {
     const commands = [{
       "devices": [{
         "customData": {
-          "tfaPin": "1234"
+          "pinNeeded": "1234"
         },
         "id": "MyAlarm"
       }],

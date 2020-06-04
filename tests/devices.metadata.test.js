@@ -79,12 +79,17 @@ describe('Test Switch Devices with Metadata', () => {
       state: 'ON',
       metadata: {
         ga: {
-          value: 'Lock'
+          value: 'Lock',
+          config: {
+            ackNeeded: true
+          }
         }
       }
     };
     const device = Devices.getDeviceForItem(item);
     expect(device.name).toBe('Lock');
+    expect(device.getMetadata(item).customData.ackNeeded).toBe(true);
+    expect(device.getMetadata(item).customData.pinNeeded).toBeUndefined();
     expect(device.getState(item)).toStrictEqual({
       isLocked: true
     });
@@ -96,12 +101,17 @@ describe('Test Switch Devices with Metadata', () => {
       state: 'ON',
       metadata: {
         ga: {
-          value: 'SecuritySystem'
+          value: 'SecuritySystem',
+          config: {
+            pinNeeded: '1234'
+          }
         }
       }
     };
     const device = Devices.getDeviceForItem(item);
     expect(device.name).toBe('SecuritySystem');
+    expect(device.getMetadata(item).customData.ackNeeded).toBeUndefined();
+    expect(device.getMetadata(item).customData.pinNeeded).toBe('1234');
     expect(device.getState(item)).toStrictEqual({
       isArmed: true
     });
@@ -601,11 +611,7 @@ describe('Test Thermostat Device with Metadata', () => {
           "thermostatTemperatureUnit": "C"
         },
         "customData": {
-          "deviceType": "action.devices.types.THERMOSTAT",
-          "itemType": "Group",
-          "inverted": false,
-          "tfaAck": undefined,
-          "tfaPin": undefined
+          "itemType": "Group"
         },
         "roomHint": undefined,
         "structureHint": undefined,

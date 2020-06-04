@@ -52,7 +52,7 @@ class GenericDevice {
   static getMetadata(item = {}) {
     const config = getConfig(item);
     const itemType = item.type === 'Group' && item.groupType ? item.groupType : item.type;
-    return {
+    const metadata = {
       id: item.name,
       type: this.type,
       traits: this.traits,
@@ -72,13 +72,19 @@ class GenericDevice {
       },
       attributes: this.getAttributes(item),
       customData: {
-        itemType: itemType,
-        deviceType: this.type,
-        inverted: config.inverted === true,
-        tfaAck: config.tfaAck,
-        tfaPin: config.tfaPin
+        itemType: itemType
       }
     };
+    if (config.inverted === true) {
+      metadata.customData.inverted = true;
+    }
+    if (config.ackNeeded === true) {
+      metadata.customData.ackNeeded = true;
+    }
+    if (typeof(config.pinNeeded) === 'string') {
+      metadata.customData.pinNeeded = config.pinNeeded;
+    }
+    return metadata;
   }
 
   static get requiredItemTypes() {
