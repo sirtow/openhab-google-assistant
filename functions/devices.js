@@ -271,11 +271,11 @@ class Lock extends GenericDevice {
   }
 
   static get requiredItemTypes() {
-    return ['Switch'];
+    return ['Switch', 'Contact'];
   }
 
   static getState(item) {
-    let state = item.state === 'ON';
+    let state = item.state === 'ON' || item.state === 'CLOSED';
     if (getConfig(item).inverted === true) {
       state = !state;
     }
@@ -411,16 +411,16 @@ class GenericOpenCloseDevice extends GenericDevice {
   }
 
   static get requiredItemTypes() {
-    return ['Rollershutter', 'Switch'];
+    return ['Rollershutter', 'Switch', 'Contact'];
   }
 
   static getState(item) {
     let state = 0;
     const itemType = item.type === 'Group' && item.groupType ? item.groupType : item.type;
-    if (itemType == 'Switch') {
-      state = item.state === 'ON' ? 0 : 100;
-    } else {
+    if (itemType === 'Rollershutter') {
       state = Number(item.state);
+    } else {
+      state = item.state === 'ON' || item.state === 'OPEN' ? 0 : 100;
     }
     return {
       openPercent: getConfig(item).inverted !== true ? 100 - state : state
