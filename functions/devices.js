@@ -59,7 +59,7 @@ class GenericDevice {
       name: {
         name: config.name || item.label,
         defaultNames: [config.name || item.label],
-        nicknames: [config.name || item.label, ...(item.metadata && item.metadata.synonyms ? item.metadata.synonyms.value.split(',') : [])]
+        nicknames: [config.name || item.label, ...(item.metadata && item.metadata.synonyms ? item.metadata.synonyms.value.split(',').map(s => s.trim()) : [])]
       },
       willReportState: false,
       roomHint: config.roomHint,
@@ -81,7 +81,7 @@ class GenericDevice {
     if (config.ackNeeded === true) {
       metadata.customData.ackNeeded = true;
     }
-    if (typeof(config.pinNeeded) === 'string') {
+    if (typeof (config.pinNeeded) === 'string') {
       metadata.customData.pinNeeded = config.pinNeeded;
     }
     return metadata;
@@ -373,15 +373,15 @@ class ColorLight extends GenericDevice {
     const attributes = {
       colorModel: 'hsv'
     };
-    const colorTemperatureRange = getConfig(item).colorTemperatureRange;
-    if (colorTemperatureRange) {
-      try {
-        const range = colorTemperatureRange.split(',');
+    const config = getConfig(item);
+    if ('colorTemperatureRange' in config) {
+      const [min, max] = config.colorTemperatureRange.split(',').map(s => Number(s.trim()));
+      if (!isNaN(min) && !isNaN(max)) {
         attributes.colorTemperatureRange = {
-          temperatureMinK: Number(range[0]),
-          temperatureMaxK: Number(range[1])
+          temperatureMinK: min,
+          temperatureMaxK: max
         };
-      } catch (err) { }
+      }
     }
     return attributes;
   }
@@ -391,15 +391,15 @@ class ColorLight extends GenericDevice {
   }
 
   static getState(item) {
-    const hsvArray = item.state.split(",").map((val) => Number(val));
+    const [hue, sat, val] = item.state.split(',').map(s => Number(s.trim()));
     return {
-      on: hsvArray[2] > 0,
-      brightness: hsvArray[2],
+      on: val > 0,
+      brightness: val,
       color: {
         spectrumHSV: {
-          hue: hsvArray[0],
-          saturation: hsvArray[1] / 100,
-          value: hsvArray[2] / 100
+          hue: hue,
+          saturation: sat / 100,
+          value: val / 100
         }
       }
     };
@@ -540,7 +540,7 @@ class Camera extends GenericDevice {
 
   static getAttributes(item) {
     return {
-      cameraStreamSupportedProtocols: (getConfig(item).protocols || 'hls,dash').split(','),
+      cameraStreamSupportedProtocols: (getConfig(item).protocols || 'hls,dash').split(',').map(s => s.trim()),
       cameraStreamNeedAuthToken: getConfig(item).token ? true : false,
       cameraStreamNeedDrmEncryption: false
     };
@@ -577,11 +577,11 @@ class Fan extends GenericDevice {
     };
     config.speeds.split(',').forEach((speedEntry) => {
       try {
-        const [speedName, speedSynonyms] = speedEntry.split('=');
+        const [speedName, speedSynonyms] = speedEntry.trim().split('=').map(s => s.trim());
         attributes.availableFanSpeeds.speeds.push({
           speed_name: speedName,
           speed_values: [{
-            speed_synonym: speedSynonyms.split(':'),
+            speed_synonym: speedSynonyms.split(':').map(s => s.trim()),
             lang: config.lang || 'en'
           }]
         });
@@ -643,7 +643,7 @@ class Sensor extends GenericDevice {
     }
     if (config.states) {
       attributes.sensorStatesSupported.descriptiveCapabilities = {}
-      attributes.sensorStatesSupported.descriptiveCapabilities.availableStates = config.states.split(',').map((state) => state.split('=')[0]);
+      attributes.sensorStatesSupported.descriptiveCapabilities.availableStates = config.states.split(',').map(s => s.trim().split('=')[0].trim());
     }
     return attributes;
   }
@@ -654,7 +654,7 @@ class Sensor extends GenericDevice {
       currentSensorStateData: {
         name: config.sensorName,
         currentSensorState: this.translateStateToGoogle(item),
-        rawValue: Number(item.state) || 0
+        rawValue: Number(item.state) || 0
       }
     };
   }
@@ -662,9 +662,9 @@ class Sensor extends GenericDevice {
   static translateStateToGoogle(item) {
     const config = getConfig(item);
     if ('states' in config) {
-      const states = config.states.split(',')
+      const states = config.states.split(',').map(s => s.trim())
       for (const state of states) {
-        const [ key, value ] = state.split('=');
+        const [key, value] = state.split('=').map(s => s.trim());
         if (value == item.state) {
           return key;
         }
@@ -692,12 +692,12 @@ class Thermostat extends GenericDevice {
     const attributes = {
       thermostatTemperatureUnit: this.usesFahrenheit(item) ? 'F' : 'C'
     };
-    if (('thermostatTemperatureRange' in config)) {
-      const range = config.thermostatTemperatureRange.split(',');
-      if (range.length > 1) {
+    if ('thermostatTemperatureRange' in config) {
+      const [min, max] = config.thermostatTemperatureRange.split(',').map(s => parseFloat(s.trim()));
+      if (!isNaN(min) && !isNaN(max)) {
         attributes.thermostatTemperatureRange = {
-          minThresholdCelsius: parseFloat(range[0]),
-          maxThresholdCelsius: parseFloat(range[1])
+          minThresholdCelsius: min,
+          maxThresholdCelsius: max
         }
       }
     }
@@ -776,12 +776,12 @@ class Thermostat extends GenericDevice {
     const config = getConfig(item);
     let modes = ['off', 'heat', 'cool', 'on', 'heatcool', 'auto', 'eco'];
     if ('modes' in config) {
-      modes = config.modes.split(',');
+      modes = config.modes.split(',').map(s => s.trim());
     }
     const modeMap = {};
     modes.forEach(pair => {
-      const [ key, value ] = pair.split('=');
-      modeMap[key] = value ? value.split(':') : [key];
+      const [key, value] = pair.split('=').map(s => s.trim());
+      modeMap[key] = value ? value.split(':').map(s => s.trim()) : [key];
     });
     return modeMap;
   }
