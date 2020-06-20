@@ -1,4 +1,5 @@
 const Devices = require('../functions/devices.js');
+const Thermostat = require('../functions/devices/thermostat.js');
 
 describe('Test Switch Devices with Metadata', () => {
   test('Switch Type', () => {
@@ -426,7 +427,7 @@ describe('Test Thermostat Device with Metadata', () => {
   });
 
   test('usesFahrenheit', () => {
-    expect(Devices.Thermostat.usesFahrenheit({
+    expect(Thermostat.usesFahrenheit({
       metadata: {
         ga: {
           value: 'Thermostat',
@@ -439,7 +440,7 @@ describe('Test Thermostat Device with Metadata', () => {
   });
 
   test('getAttributes', () => {
-    expect(Devices.Thermostat.getAttributes({
+    expect(Thermostat.getAttributes({
       metadata: {
         ga: {
           value: 'Thermostat',
@@ -453,7 +454,7 @@ describe('Test Thermostat Device with Metadata', () => {
       thermostatTemperatureUnit: 'F',
     });
 
-    expect(Devices.Thermostat.getAttributes({
+    expect(Thermostat.getAttributes({
       metadata: {
         ga: {
           value: 'Thermostat',
@@ -467,7 +468,7 @@ describe('Test Thermostat Device with Metadata', () => {
       thermostatTemperatureUnit: 'C',
     });
 
-    expect(Devices.Thermostat.getAttributes({
+    expect(Thermostat.getAttributes({
       metadata: {
         ga: {
           value: 'Thermostat',
@@ -482,7 +483,7 @@ describe('Test Thermostat Device with Metadata', () => {
     });
 
     // test thermostatTemperatureRange attribute
-    expect(Devices.Thermostat.getAttributes({
+    expect(Thermostat.getAttributes({
       metadata: {
         ga: {
           value: 'Thermostat',
@@ -501,7 +502,7 @@ describe('Test Thermostat Device with Metadata', () => {
     });
 
     // wrong value for thermostatTemperatureRange should not throw error
-    expect(Devices.Thermostat.getAttributes({
+    expect(Thermostat.getAttributes({
       metadata: {
         ga: {
           value: 'Thermostat',
@@ -516,7 +517,7 @@ describe('Test Thermostat Device with Metadata', () => {
     });
 
     // wrong value for thermostatTemperatureRange should not throw error
-    expect(Devices.Thermostat.getAttributes({
+    expect(Thermostat.getAttributes({
       metadata: {
         ga: {
           value: 'Thermostat',
@@ -532,7 +533,7 @@ describe('Test Thermostat Device with Metadata', () => {
   });
 
   test('getModeMap', () => {
-    expect(Devices.Thermostat.getModeMap({
+    expect(Thermostat.getModeMap({
       metadata: {
         ga: {
           value: 'Thermostat'
@@ -548,7 +549,7 @@ describe('Test Thermostat Device with Metadata', () => {
       'eco': ['eco']
     });
 
-    expect(Devices.Thermostat.getModeMap({
+    expect(Thermostat.getModeMap({
       metadata: {
         ga: {
           value: 'Thermostat',
@@ -564,7 +565,7 @@ describe('Test Thermostat Device with Metadata', () => {
       'cool': ['cool']
     });
 
-    expect(Devices.Thermostat.getModeMap({
+    expect(Thermostat.getModeMap({
       metadata: {
         ga: {
           value: 'Thermostat',
@@ -583,7 +584,7 @@ describe('Test Thermostat Device with Metadata', () => {
   });
 
   test('translateModeToGoogle', () => {
-    expect(Devices.Thermostat.translateModeToGoogle({
+    expect(Thermostat.translateModeToGoogle({
       metadata: {
         ga: {
           value: 'Thermostat',
@@ -594,7 +595,7 @@ describe('Test Thermostat Device with Metadata', () => {
       }
     }, 'COMFORT')).toBe('heat');
 
-    expect(Devices.Thermostat.translateModeToGoogle({
+    expect(Thermostat.translateModeToGoogle({
       metadata: {
         ga: {
           value: 'Thermostat',
@@ -607,7 +608,7 @@ describe('Test Thermostat Device with Metadata', () => {
   });
 
   test('translateModeToOpenhab', () => {
-    expect(Devices.Thermostat.translateModeToOpenhab({
+    expect(Thermostat.translateModeToOpenhab({
       metadata: {
         ga: {
           value: 'Thermostat',
@@ -618,7 +619,7 @@ describe('Test Thermostat Device with Metadata', () => {
       }
     }, 'heat')).toBe('COMFORT');
 
-    expect(Devices.Thermostat.translateModeToOpenhab({
+    expect(Thermostat.translateModeToOpenhab({
       metadata: {
         ga: {
           value: 'Thermostat',
@@ -631,7 +632,7 @@ describe('Test Thermostat Device with Metadata', () => {
   });
 
   test('getMetadata', () => {
-    expect(Devices.Thermostat.getMetadata(
+    expect(Thermostat.getMetadata(
       {
         name: 'MyItem',
         label: 'MyThermostat',
@@ -708,7 +709,7 @@ describe('Test Thermostat Device with Metadata', () => {
   });
 
   test('getState', () => {
-    expect(Devices.Thermostat.getState({
+    expect(Thermostat.getState({
       type: 'Group',
       metadata: {
         ga: {
@@ -717,7 +718,7 @@ describe('Test Thermostat Device with Metadata', () => {
       }
     })).toStrictEqual({});
 
-    expect(Devices.Thermostat.getState({
+    expect(Thermostat.getState({
       type: 'Group',
       metadata: {
         ga: {
@@ -758,7 +759,7 @@ describe('Test Thermostat Device with Metadata', () => {
       'thermostatMode': 'off'
     });
 
-    expect(Devices.Thermostat.getState({
+    expect(Thermostat.getState({
       type: 'Group',
       metadata: {
         ga: {
