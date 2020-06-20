@@ -430,8 +430,8 @@ describe('Test Thermostat Device with Metadata', () => {
         }
       }
     })).toStrictEqual({
-      'availableThermostatModes': 'off,heat,cool,on,heatcool,auto,eco',
-      'thermostatTemperatureUnit': 'F',
+      availableThermostatModes: 'off,heat,cool,on,heatcool,auto,eco',
+      thermostatTemperatureUnit: 'F',
     });
 
     expect(Devices.Thermostat.getAttributes({
@@ -444,8 +444,8 @@ describe('Test Thermostat Device with Metadata', () => {
         }
       }
     })).toStrictEqual({
-      'availableThermostatModes': 'on,off',
-      'thermostatTemperatureUnit': 'C',
+      availableThermostatModes: 'on,off',
+      thermostatTemperatureUnit: 'C',
     });
 
     expect(Devices.Thermostat.getAttributes({
@@ -458,8 +458,42 @@ describe('Test Thermostat Device with Metadata', () => {
         }
       }
     })).toStrictEqual({
-      'availableThermostatModes': 'off,heat,eco,on,auto',
-      'thermostatTemperatureUnit': 'C',
+      availableThermostatModes: 'off,heat,eco,on,auto',
+      thermostatTemperatureUnit: 'C',
+    });
+
+    // test thermostatTemperatureRange attribute
+    expect(Devices.Thermostat.getAttributes({
+      metadata: {
+        ga: {
+          value: 'Thermostat',
+          config: {
+            thermostatTemperatureRange: '10,30'
+          }
+        }
+      }
+    })).toStrictEqual({
+      availableThermostatModes: 'off,heat,cool,on,heatcool,auto,eco',
+      thermostatTemperatureUnit: 'C',
+      thermostatTemperatureRange: {
+        minThresholdCelsius: 10.0,
+        maxThresholdCelsius: 30.0
+      }
+    });
+
+    // wrong value for thermostatTemperatureRange should not throw error
+    expect(Devices.Thermostat.getAttributes({
+      metadata: {
+        ga: {
+          value: 'Thermostat',
+          config: {
+            thermostatTemperatureRange: '100'
+          }
+        }
+      }
+    })).toStrictEqual({
+      availableThermostatModes: 'off,heat,cool,on,heatcool,auto,eco',
+      thermostatTemperatureUnit: 'C'
     });
   });
 
