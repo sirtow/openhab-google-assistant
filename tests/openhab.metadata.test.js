@@ -1793,7 +1793,7 @@ describe('Test EXECUTE with Metadata', () => {
         "id": "MyTV"
       }],
       "execution": [{
-        "command": "action.devices.commands.SelectChannel",
+        "command": "action.devices.commands.selectChannel",
         "params": {
           "channelNumber": "20"
         }
