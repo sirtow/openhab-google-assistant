@@ -196,7 +196,8 @@ describe('Test Light Devices with Metadata', () => {
             colorTemperatureRange: '1000,4000'
           }
         }
-      }
+      },
+      state: '100,50,20'
     };
     const device = Devices.getDeviceForItem(item);
     expect(device.name).toBe('ColorLight');
@@ -206,6 +207,17 @@ describe('Test Light Devices with Metadata', () => {
         temperatureMinK: 1000,
         temperatureMaxK: 4000
       }
+    });
+    expect(device.getState(item)).toStrictEqual({
+      brightness: 20,
+      color: {
+        spectrumHSV: {
+          hue: 100,
+          saturation: 0.5,
+          value: 0.2,
+        }
+      },
+      on: true
     });
   });
 
@@ -225,6 +237,54 @@ describe('Test Light Devices with Metadata', () => {
     expect(device.name).toBe('ColorLight');
     expect(device.getAttributes(item)).toStrictEqual({
       colorModel: 'hsv'
+    });
+  });
+
+  test('Special Color Light Type', () => {
+    const item = {
+      type: 'Group',
+      metadata: {
+        ga: {
+          value: 'LIGHT',
+          config: {
+            colorTemperatureRange: '1000,4000'
+          }
+        }
+      },
+      members: [{
+        name: 'Brightness',
+        type: 'Dimmer',
+        metadata: {
+          ga: {
+            value: 'lightBrightness'
+          }
+        },
+        state: '10'
+      }, {
+        name: 'ColorTemp',
+        type: 'Dimmer',
+        metadata: {
+          ga: {
+            value: 'lightColorTemperature'
+          }
+        },
+        state: '50'
+      }]
+    };
+    const device = Devices.getDeviceForItem(item);
+    expect(device.name).toBe('SpecialColorLight');
+    expect(device.getAttributes(item)).toStrictEqual({
+      colorTemperatureRange: {
+        temperatureMinK: 1000,
+        temperatureMaxK: 4000
+      }
+    });
+    expect(device.getState(item)).toStrictEqual({
+      brightness: 10,
+      color: {
+        temperatureK: 2500
+      },
+      on: true
     });
   });
 });
@@ -681,6 +741,7 @@ describe('Test Thermostat Device with Metadata', () => {
           "thermostatTemperatureUnit": "C"
         },
         "customData": {
+          "deviceType": "Thermostat",
           "itemType": "Group"
         },
         "roomHint": undefined,
