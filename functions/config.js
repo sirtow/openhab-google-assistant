@@ -34,7 +34,7 @@
  **/
 module.exports = {
 		//userpass: 'user@foo.com:Password1',
-		host: '<YOUR-CLOUD-HOST>',
-		port: 443,
-		path: '/YOUR/REST/ENDPOINT',
+		host: process.env.OH_HOST || "localhost",
+		port: process.env.OH_PORT || 80,
+		path: process.env.OH_PATH || '/rest/items',
 };

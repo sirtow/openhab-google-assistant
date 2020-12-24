@@ -18,7 +18,7 @@
  * @author Michael Krug - Rework
  *
  */
-const https = require('https');
+const https = (!process.env.OH_PORT || process.env.OH_PORT==="80")? require('http'): require('https');
 
 class ApiHandler {
   constructor(config = {}, authToken = '') {
