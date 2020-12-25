@@ -631,6 +631,38 @@ class TemperatureSensor extends GenericDevice {
     };
   }
 }
+class HumiditySensor extends GenericDevice {
+    static get type() {
+        return 'action.devices.types.SENSOR';
+    }
+
+    static get traits() {
+        return [
+            'action.devices.traits.HumiditySetting'
+        ];
+    }
+
+    static getAttributes(item) {
+        return {
+            queryOnlyTemperatureControl: true,
+        };
+    }
+
+    static get requiredItemTypes() {
+        return ['Number'];
+    }
+
+    static isCompatible(item = {}) {
+        return item.metadata && item.metadata.ga && item.metadata.ga.value.toLowerCase() == 'humiditysensor'
+    }
+
+    static getState(item) {
+        let state = Number(parseFloat(item.state).toFixed(1));
+        return {
+            humidityAmbientPercent: Math.round(state)
+        };
+    }
+}
 
 class Thermostat extends GenericDevice {
   static get type() {
@@ -783,7 +815,7 @@ const Devices = [
   SimpleFan, Fan,
   SimpleHood, Hood,
   SimpleAirPurifier, AirPurifier,
-  TemperatureSensor,
+  TemperatureSensor,HumiditySensor,
   Thermostat
 ];
 
