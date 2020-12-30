@@ -77,7 +77,10 @@ class ApiHandler {
           resolve(JSON.parse(body));
         });
       });
-      req.on('error', reject);
+      req.on('error', (e)=>{
+        console.error("Failed to get items",e)
+        reject(e);
+      });
       req.end();
     });
   }
